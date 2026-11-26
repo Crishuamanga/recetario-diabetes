@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react"
-import { Zap, Infinity as Inf, Globe, ShieldCheck, Mail, ChevronRight, Clock, Check, MessageCircle, Salad, Sandwich, Moon, Cake, HelpCircle, Shuffle, Search, Smartphone, Star, ArrowRight, Flame, Wheat } from "lucide-react"
+import { Zap, Infinity as Inf, Globe, ShieldCheck, Mail, ChevronRight, Clock, Check, Salad, Sandwich, Moon, Cake, HelpCircle, Shuffle, Search, Smartphone, Star, ArrowRight, Flame, Wheat } from "lucide-react"
 import { DishOrbitCarousel } from "./components/ui/dish-orbit-carousel"
 import { CHECKOUT_URL, CTA_TEXT, SUPPORT_MAIL, WHATSAPP, dishes, wheel, chapters, bonos, faqs } from "./data"
 
 const BAR_H = 46
-const CTA_H = 76
 
 function Cta({ id, big }: { id?: string; big?: boolean }) {
   return (
@@ -17,7 +16,7 @@ function Cta({ id, big }: { id?: string; big?: boolean }) {
 }
 
 function TimerBar() {
-  const [left, setLeft] = useState(60)
+  const [left, setLeft] = useState(600)
   useEffect(() => {
     const t = setInterval(() => setLeft((s) => (s > 0 ? s - 1 : 0)), 1000)
     return () => clearInterval(t)
@@ -28,9 +27,9 @@ function TimerBar() {
   return (
     <div className={"timer" + (done ? " timer-done" : "")} style={{ height: BAR_H }} role="timer" aria-live="off">
       {done ? (
-        <p className="timer-msg"><strong>¡Tiempo finalizado!</strong> Adquiere el pack completo: las 200 recetas y los 5 bonos.</p>
+        <p className="timer-msg"><strong>¡Tiempo finalizado!</strong> Adquiere el pack completo: las 200 recetas y los bonus.</p>
       ) : (
-        <p className="timer-msg"><Clock size={18} aria-hidden="true" /> Bonus por tiempo limitado: <span className="timer-num">{mm}:{ss}</span></p>
+        <p className="timer-msg">La promoción exclusiva termina en <span className="timer-num">{mm}:{ss}</span></p>
       )}
     </div>
   )
@@ -80,7 +79,7 @@ export default function App() {
       <main>
         {/* CARRUSEL */}
         <section className="theme-car" aria-label="Platos de ejemplo">
-          <DishOrbitCarousel dishes={dishes} loop={false} top={BAR_H} height={`calc(100svh - ${BAR_H + CTA_H}px)`} />
+          <DishOrbitCarousel dishes={dishes} loop={false} pinned={false} />
         </section>
 
         {/* HÉROE */}
@@ -254,7 +253,7 @@ export default function App() {
         {/* OFERTA */}
         <section className="sec offer">
           <div className="wrap">
-            <div className="bonus-red"><span className="bonus-ic"><Clock size={28} aria-hidden="true" /></span><b>Bonus por tiempo limitado</b><span>Pack completo: 200 recetas + 5 bonos</span></div>
+            <div className="bonus-red"><b>Bonus por tiempo limitado</b><span>Pack completo: 200 recetas + 5 bonos</span></div>
             <div className="offer-box">
               <h2>Qué incluye tu pack</h2>
               <ul>
@@ -302,12 +301,14 @@ export default function App() {
       <footer className="foot">
         <div className="wrap">
           <p><b>Recetarios Vida Sana</b> · Material digital educativo y culinario. Este recetario es una guía general de alimentación y no sustituye la atención médica ni nutricional individual. No promete resultados médicos específicos; la experiencia y los resultados pueden variar de una persona a otra. Consulta siempre con tu médico o nutricionista antes de hacer cambios en tu alimentación, especialmente si tomas medicación para la diabetes.</p>
-          <p>© 2026 Recetarios Vida Sana · Soporte: <a href={`mailto:${SUPPORT_MAIL}`}>{SUPPORT_MAIL}</a></p>
+          <p className="foot-sup">© 2026 Recetarios Vida Sana · Soporte: <a href={`mailto:${SUPPORT_MAIL}`}>{SUPPORT_MAIL}</a>
+            <a className="wa-ic" href={WHATSAPP} target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+              <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><path fill="#25D366" d="M16 2.7C8.6 2.7 2.6 8.7 2.6 16.1c0 2.4.6 4.6 1.8 6.6L2.5 29.3l6.8-1.8c1.9 1 4 1.6 6.2 1.6h.1c7.4 0 13.4-6 13.4-13.4S23.400 2.700 16 2.700z"/><path fill="#fff" d="M23 19.500c-.4-.2-2.300-1.100-2.600-1.200-.4-.1-.6-.2-.9.200-.3.400-1 1.200-1.200 1.400-.2.300-.4.300-.8.100-1.200-.6-2.300-1.200-3.400-2.400-.8-.8-1.500-1.700-1.700-2.100-.2-.4 0-.6.200-.8l.6-.7c.2-.2.300-.4.400-.7.100-.2 0-.5 0-.7l-1.200-2.900c-.3-.7-.6-.6-.9-.6h-.7c-.3 0-.7.100-1 .5-.4.400-1.400 1.400-1.400 3.300s1.400 3.800 1.600 4.100c.2.300 2.800 4.300 6.700 6 2.400 1 3.300 1.100 4.500.9.700-.1 2.300-.9 2.600-1.800.3-.9.300-1.700.2-1.800-.1-.200-.4-.300-.8-.500z"/></svg>
+            </a></p>
         </div>
       </footer>
 
-      <a className="wa" href={WHATSAPP} target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp"><MessageCircle size={26} aria-hidden="true" /></a>
-      <div className="sticky" style={{ height: CTA_H }}><Cta id="cta-sticky" /></div>
+      <div className="sticky"><Cta id="cta-sticky" /></div>
     </>
   )
 }

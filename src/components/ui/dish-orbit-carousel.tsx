@@ -51,6 +51,8 @@ export type DishOrbitCarouselProps = {
   fontSrc?: string | null
   /** Height of a sticky bar above the stage, in px. */
   top?: number
+  /** Pin the stage while scrolling (default). false: a normal in-flow section driven by swipes and buttons only. */
+  pinned?: boolean
   onChange?: (index: number) => void
   className?: string
 }
@@ -130,15 +132,16 @@ const FONT = "'Outfit Variable'"
 
 const CSS =
   ".dsh-trk{position:relative;width:100%}" +
-  ".dsh-root{position:sticky;top:var(--dsh-top,0px);overflow:hidden;width:100%;background:var(--color-background);color:var(--color-foreground);" +
+  ".dsh-root{position:relative;top:var(--dsh-top,0px);overflow:hidden;width:100%;background:var(--color-background);color:var(--color-foreground);" +
   "font-family:" + FONT + ",ui-sans-serif,system-ui,sans-serif;container-type:inline-size;-webkit-tap-highlight-color:transparent}" +
+  ".dsh-pin{position:sticky}" +
   ".dsh-root *{box-sizing:border-box}" +
   ".dsh-bd{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;pointer-events:none}" +
   ".dsh-wash{position:absolute;inset:0;background:color-mix(in oklab,var(--color-background) 38%,transparent);pointer-events:none}" +
   // multiply by the background: a no-op on a light theme, lights-off on a dark one
   ".dsh-dim{position:absolute;inset:0;background:var(--color-background);mix-blend-mode:multiply;opacity:.72;pointer-events:none}" +
   ".dsh-root:focus-visible{outline:2px solid var(--color-primary);outline-offset:-4px}" +
-  ".dsh-canvas{position:absolute;left:50%;top:50%;width:960px;height:520px;transform:translate(-50%,-50%) scale(var(--dsh-s,1));transform-origin:50% 50%}" +
+  ".dsh-canvas{touch-action:pan-y;position:absolute;left:50%;top:50%;width:960px;height:520px;transform:translate(-50%,-50%) scale(var(--dsh-s,1));transform-origin:50% 50%}" +
   ".dsh-arc{position:absolute;left:0;top:0;width:960px;height:520px;overflow:visible;pointer-events:none}" +
   ".dsh-btn{appearance:none;border:0;background:none;color:inherit;font:inherit;padding:0;margin:0;cursor:pointer}" +
   ".dsh-btn:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:10px}" +
@@ -168,7 +171,7 @@ const CSS =
   ".dsh-card{position:absolute;left:722px;top:137px;width:223px;padding:18px 20px 20px;border-radius:20px;" +
   "background:color-mix(in oklab,var(--color-background) 72%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);" +
   "box-shadow:0 1px 0 color-mix(in oklab,var(--color-foreground) 6%,transparent) inset,0 18px 40px -24px rgba(0,0,0,.25)}" +
-  ".dsh-tabs{display:flex;justify-content:space-between;padding:0 6px 0 20px;font-size:12px;margin-bottom:20px}" +
+  ".dsh-tabs{display:flex;justify-content:space-between;padding:0 6px 0 20px;font-size:13px;margin-bottom:12px}" +
   ".dsh-tab{color:var(--color-muted-foreground);font-weight:500;padding:3px 0}" +
   ".dsh-tab[aria-selected=true]{color:var(--color-foreground);font-weight:600}" +
   ".dsh-bodies{display:grid}" +
@@ -212,10 +215,10 @@ const CSS =
   ".dsh-arc{width:200%;height:auto;left:-60%;top:-30px}" +
   ".dsh-nav{position:relative;left:auto;top:auto;margin-top:2px;width:100%;justify-content:center}" +
   ".dsh-pager{left:14px;top:150px}" +
-  ".dsh-plates{position:relative;left:auto;top:auto;width:min(52vw,32svh);height:min(52vw,32svh);margin-top:0}" +
+  ".dsh-plates{position:relative;left:auto;top:auto;width:min(46vw,27svh);height:min(46vw,27svh);margin-top:0}" +
   ".dsh-orbit>img{width:100%;height:100%}" +
-  ".dsh-head{position:relative;left:auto;top:auto;width:100%;height:132px;margin-top:10px}" +
-  ".dsh-hd{text-align:center;transform:scale(.78);transform-origin:50% 0}" +
+  ".dsh-head{position:relative;left:auto;top:auto;width:100%;height:104px;margin-top:6px}" +
+  ".dsh-hd{text-align:center;inset:auto;left:-21%;top:0;width:142%;height:100%;transform:scale(.7);transform-origin:50% 0}" +
     ".dsh-card{position:relative;left:auto;top:auto;width:100%;max-width:420px;margin-top:12px}" +
   // phone: the pinned stage has to fit one screen; the pager, swipes and scroll cover the strip
   ".dsh-strip{display:none}" +
@@ -242,6 +245,7 @@ export function DishOrbitCarousel({
   loop = true,
   fontSrc = FONT_DATA,
   top = 0,
+  pinned = true,
   onChange,
   className,
 }: DishOrbitCarouselProps) {
@@ -273,6 +277,12 @@ export function DishOrbitCarousel({
     if (!el) return
     const fit = () => {
       const w = el.clientWidth
+      if (!pinned) {
+        const sc = Math.min(w / 960, 1.25)
+        el.style.height = w >= 640 ? Math.round(520 * sc + 24) + "px" : "auto"
+        el.style.setProperty("--dsh-s", String(sc))
+        return
+      }
       const h = el.clientHeight
       el.style.setProperty("--dsh-s", String(Math.min(w / 960, h / 520, 1.6)))
     }
@@ -280,7 +290,7 @@ export function DishOrbitCarousel({
     const ro = new ResizeObserver(fit)
     ro.observe(el)
     return () => ro.disconnect()
-  }, [])
+  }, [pinned])
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
@@ -365,7 +375,7 @@ export function DishOrbitCarousel({
   }
 
   // The page scroll drives the dish: the stage pins, one stretch of scroll per dish, snapping between them.
-  const steps = scrollSteps(n, loop)
+  const steps = pinned ? scrollSteps(n, loop) : 0
   useEffect(() => {
     const track = trackRef.current
     if (!track || steps < 1) return
@@ -445,11 +455,11 @@ export function DishOrbitCarousel({
   const dish = dishes[index]
 
   return (
-    <div ref={trackRef} className={"dsh-trk" + (className ? " " + className : "")} style={{ height: "calc(" + height + " * " + (1 + steps * SCROLL_PER_DISH) + ")" }}>
+    <div ref={trackRef} className={"dsh-trk" + (className ? " " + className : "")} style={pinned ? { height: "calc(" + height + " * " + (1 + steps * SCROLL_PER_DISH) + ")" } : undefined}>
     <div
       ref={rootRef}
-      className="dsh-root"
-      style={{ height, ["--dsh-top" as string]: top + "px" }}
+      className={"dsh-root" + (pinned ? " dsh-pin" : "")}
+      style={pinned ? { height, ["--dsh-top" as string]: top + "px" } : undefined}
       role="region"
       aria-roledescription="carousel"
       aria-label="Platos de ejemplo"
@@ -463,7 +473,7 @@ export function DishOrbitCarousel({
       {backdrop ? <div className="dsh-dim" /> : null}
       {backdrop ? <div className="dsh-wash" /> : null}
 
-      <div className="dsh-canvas">
+      <div className="dsh-canvas" onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => (swipe.current = null)}>
         <svg className="dsh-arc" viewBox="0 0 960 520" aria-hidden="true">
           <path ref={arcRef} style={{ opacity: 0.34 }} />
         </svg>
@@ -477,7 +487,7 @@ export function DishOrbitCarousel({
           ))}
         </div>
 
-        <div className="dsh-plates" onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerCancel={() => (swipe.current = null)}>
+        <div className="dsh-plates">
           {dishes.map((d, i) => (
             <div key={i} ref={(el) => { orbits.current[i] = el }} className="dsh-orbit" aria-hidden={i !== index}>
               <img src={d.image} alt={d.alt ?? d.title + " " + d.subtitle} width={245} height={245} draggable={false} />
