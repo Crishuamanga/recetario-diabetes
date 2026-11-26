@@ -500,8 +500,8 @@ export function DishOrbitCarousel({
             <div key={i} ref={(el) => { heads.current[i] = el }} className="dsh-hd" aria-hidden={i !== index}>
               <p className="dsh-eye">{d.eyebrow ?? d.category}</p>
               <h2 style={{ margin: 0, font: "inherit" }}>
-                <span className="dsh-t1" style={{ fontSize: fitSize(d.title.length, 56, 330, 0.56) + "px" }}>{d.title}</span>
-                <span className="dsh-t2" style={{ fontSize: fitSize(d.subtitle.length, 62, 320, 0.64) + "px" }}>{d.subtitle}</span>
+                <span className="dsh-t1" style={{ fontSize: fitSize(d.title.length, 56, 320, 0.7) + "px" }}>{d.title}</span>
+                <span className="dsh-t2" style={{ fontSize: fitSize(d.subtitle.length, 62, 320, 0.72) + "px" }}>{d.subtitle}</span>
               </h2>
             </div>
           ))}

@@ -271,7 +271,7 @@ export default function App() {
               <p className="legal-mini c">Los medios de pago disponibles dependen de tu país.</p>
             </div>
             <div className="guar">
-              <img src="/img/garantia-7-dias.webp" alt="Garantía de 7 días" width={600} height={600} loading="lazy" />
+              <img src="/img/garantia-7-dias-v2.webp" alt="Garantía de 7 días" width={600} height={600} loading="lazy" />
               <div><h3>Pruébalo 7 días. Si no es para ti, te devolvemos el dinero.</h3><p>Entra al área de miembros, mira las 200 recetas y cocina lo que quieras. Si no te sirve, escríbenos dentro de los primeros 7 días y recibes el reembolso completo a través de Hotmart.</p></div>
             </div>
           </div>

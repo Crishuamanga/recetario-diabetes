@@ -6,16 +6,16 @@ export const SUPPORT_MAIL = "recetasgourmet4@gmail.com"
 export const WHATSAPP = "https://wa.link/7tntu9"
 
 export const dishes: Dish[] = [
-  { title: "Omelette de", subtitle: "Espinaca y hongos", image: "/img/orbit/desayuno.webp", category: "Desayuno", accent: "#E8A33D",
+  { title: "Omelette de", subtitle: "Espinaca y hongos", image: "/img/orbit/desayuno-v2.webp", category: "Desayuno", accent: "#E8A33D",
     description: "Huevos esponjosos rellenos de espinaca, champiñones y queso, con tomates cherry al lado. Listo en 18 minutos.",
     ingredients: ["2 huevos", "Espinaca", "Champiñones", "Tomates cherry", "Aceite de oliva", "Queso rallado ligero"] },
-  { title: "Salmón al limón", subtitle: "Con quinoa", image: "/img/orbit/almuerzo.webp", category: "Almuerzo", accent: "#1F8A4C",
+  { title: "Salmón al limón", subtitle: "Con quinoa", image: "/img/orbit/almuerzo-v2.webp", category: "Almuerzo", accent: "#1F8A4C",
     description: "Salmón a la plancha con limón y eneldo, quinoa con hierbas y espárragos. Un almuerzo completo y sin complicaciones.",
     ingredients: ["Salmón", "Limón", "Quinoa", "Espárragos", "Eneldo"] },
-  { title: "Curry de garbanzos", subtitle: "Y espinaca", image: "/img/orbit/cena.webp", category: "Cena", accent: "#3F8F9B",
+  { title: "Curry de garbanzos", subtitle: "Y espinaca", image: "/img/orbit/cena-v2.webp", category: "Cena", accent: "#3F8F9B",
     description: "Una cena cremosa y reconfortante, con garbanzos, espinaca y un toque de yogur. Ligera para cerrar el día.",
     ingredients: ["Garbanzos", "Espinaca", "Yogur", "Cilantro", "Especias"] },
-  { title: "Mousse de aguacate", subtitle: "Y cacao", image: "/img/orbit/postre.webp", category: "Postre", accent: "#C0587A",
+  { title: "Mousse de aguacate", subtitle: "Y cacao", image: "/img/orbit/postre-v2.webp", category: "Postre", accent: "#C0587A",
     description: "Un postre cremoso de chocolate con frambuesas, para el antojo dulce sin salirte de tu plan.",
     ingredients: ["Aguacate", "Cacao", "Frambuesas"] },
 ]
